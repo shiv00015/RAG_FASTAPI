@@ -1,0 +1,4 @@
+FastAPI is a modern, high-performance web framework for building APIs with Python.
+It uses type hints and automatic documentation generation.
+Retrieval-Augmented Generation (RAG) improves LLM accuracy by combining retrieval and generation.
+FAISS is a library for efficient similarity search and clustering of dense vectors.

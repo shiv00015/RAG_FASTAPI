@@ -1,0 +1,6 @@
+.env
+
+# Virtual environment
+rag_env/
+ENV/
+.env
