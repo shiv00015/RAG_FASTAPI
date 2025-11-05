@@ -1,5 +1,11 @@
 .env
 
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
 # Virtual environment
 rag_env/
 ENV/
