@@ -7,13 +7,13 @@ A FastAPI-based API that implements Retrieval-Augmented Generation (RAG) for que
 This project implements a RAG (Retrieval-Augmented Generation) system that:
 1. Stores text documents as vector embeddings using FAISS
 2. Retrieves relevant context based on user questions
-3. Generates accurate answers using OpenAI's language models
+3. Generates accurate answers using OpenAI's language models or Gemini's language models
 
 ## Features
 
 - FastAPI endpoints for querying the knowledge base
 - Vector similarity search using FAISS
-- Integration with OpenAI for answer generation
+- Integration with OpenAI or Gemini for answer generation
 - Asynchronous file operations with aiofiles
 - Automatic API documentation with FastAPI
 - Hot reload support for development
@@ -28,7 +28,8 @@ This project implements a RAG (Retrieval-Augmented Generation) system that:
 │   └── lifespan.py     # Application lifecycle management
 └── utils/
     ├── embeddings.py   # Vector store implementation
-    └── rag_pipeline.py # RAG pipeline implementation
+    |── rag_pipeline.py # OpenAI RAG pipeline implementation
+    └── gemini_rag_pipeline.py # Gemini RAG pipeline implementation
 ```
 
 ## Installation
@@ -93,9 +94,10 @@ GET /ask?question=What is FastAPI?
 ## Dependencies
 
 Key dependencies include:
-- FastAPI: ${fastapi_version}
-- FAISS-CPU: ${faiss_version}
-- OpenAI: ${openai_version}
+- FastAPI
+- FAISS-CPU
+- OpenAI
+- Gemini
 - Sentence-Transformers
 - Python-dotenv
 - Uvicorn
@@ -105,10 +107,3 @@ For a complete list of dependencies, see `requirements.txt`.
 ## Development
 
 The project uses FastAPI's hot reload feature for development. Any changes to the code will automatically restart the server.
-
-## License
-
-MIT
-
----
-*Note: Replace placeholders (${version_numbers}) with actual versions from your requirements.txt before deploying.*
