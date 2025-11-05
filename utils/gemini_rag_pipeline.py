@@ -7,7 +7,6 @@ class GeminiService:
     def __init__(self):
         settings = get_settings()
         api_key = settings.google_api_key
-        print(f"Using API key: {api_key[:10]}...")  # Print first 10 chars for verification
         genai.configure(api_key=api_key)
         
         try:
@@ -23,7 +22,6 @@ class GeminiService:
         
     async def analyze_doc(self, **kwargs):
         try:
-            print("prompt", kwargs)
             prompt = kwargs.get("prompt")
             if not prompt:
                 raise ValueError("prompt is required")

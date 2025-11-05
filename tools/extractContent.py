@@ -2,9 +2,9 @@ from PyPDF2 import PdfReader
 import docx
 
 class ExtractContent:
-    def __init__(self, contents: str, filename: str):
-        self.contents = contents
-        self.filename = filename
+    def __init__(self, **kwargs: dict):
+        self.contents = kwargs.get("contents")
+        self.filename = kwargs.get("filename")
     
     def __getBytesIO(self):
         from io import BytesIO

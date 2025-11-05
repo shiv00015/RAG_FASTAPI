@@ -7,9 +7,9 @@ from utils.rag_pipeline import generate_answer
 from pydantic import BaseModel
 
 
-class Login(BaseModel):
-    username: str
-    password: str
+# class Login(BaseModel):
+#     username: str
+#     password: str
     
 class AppStates(BaseModel):
     sent: object
@@ -31,21 +31,20 @@ def root_utl(extractor: VectorStore = Depends(get_extractor)):
     return {"message": "Got runned", "emeddings": "done"}
 
 
-@app.post("/login")
-def login_app(res: Response, login: Login):
-    login.usernam
-    print(type(login))
+# @app.post("/login")
+# def login_app(res: Response, login: Login):
+#     login.usernam
+#     print(type(login))
     
 
 @app.post("/upload")
 async def upload_file(file: UploadFile = File(...)):
     try:
         contents = await file.read()
-        extract = ExtractContent(contents, file.filename)
+        extract = ExtractContent(contents=contents, filename=file.filename)
         texts = extract.extractor()
         app.state.gemini = GeminiService()
         app.state.sent = VectorStore(texts)
-        print(app.state.sent.getembeddings())
         return "Uploaded"
     except Exception as e:
         raise HTTPException(status_code="500", detail=e)
@@ -57,8 +56,6 @@ async def ask_question(
     question: str = Query("...", description="Ask question"),
     extractor: AppStates = Depends(get_extractor),
 ):
-    # print('state gemini', extractor.gemini)
-    # _gemini = req.state.gemini
     try:
         retrieved_docs = extractor.sent.search(question, 6)
         context = " ".join(retrieved_docs)
