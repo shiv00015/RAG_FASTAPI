@@ -12,7 +12,6 @@ class VectorStore:
 
     def search(self, query, top_k=3):
         query_vector = self.model.encode([query])
-        print('endcoded query', query_vector)
         _, indices = self.index.search(np.array(query_vector), top_k)
         return [self.docs[i] for i in indices[0]]
     

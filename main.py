@@ -1,4 +1,5 @@
-from fastapi import Depends, FastAPI, Query, Request, Response, HTTPException
+from fastapi import Depends, FastAPI, Query, Request, Response, HTTPException, UploadFile, File
+from tools.extractContent import ExtractContent
 from utils.embeddings import VectorStore
 from core.lifespan import lifespan
 from utils.gemini_rag_pipeline import GeminiService
@@ -19,7 +20,8 @@ def get_extractor(req: Request):
     return req.app.state
 
 
-app = FastAPI(lifespan=lifespan)
+# app = FastAPI(lifespan=lifespan)
+app = FastAPI()
 
 
 @app.get("/")
@@ -31,25 +33,42 @@ def root_utl(extractor: VectorStore = Depends(get_extractor)):
 
 @app.post("/login")
 def login_app(res: Response, login: Login):
-
     login.usernam
     print(type(login))
+    
+
+@app.post("/upload")
+async def upload_file(file: UploadFile = File(...)):
+    try:
+        contents = await file.read()
+        extract = ExtractContent(contents, file.filename)
+        texts = extract.extractor()
+        app.state.gemini = GeminiService()
+        app.state.sent = VectorStore(texts)
+        print(app.state.sent.getembeddings())
+        return "Uploaded"
+    except Exception as e:
+        raise HTTPException(status_code="500", detail=e)
+     
 
 
 @app.get("/ask")
 async def ask_question(
-    req: Request,
     question: str = Query("...", description="Ask question"),
     extractor: AppStates = Depends(get_extractor),
 ):
     # print('state gemini', extractor.gemini)
     # _gemini = req.state.gemini
     try:
-        retrieved_docs = extractor.sent.search(question)
+        retrieved_docs = extractor.sent.search(question, 6)
         context = " ".join(retrieved_docs)
-        prompt = f"""You are an assistant that answers based only on the context. Context: {context} Question: {question} Answer:"""
-        print("prompt", prompt)
-        print('extractor', extractor)
+        prompt = f"""You are an assistant that answers based only on the context. 
+        Context: {context} Question: {question}, 
+        please give answer in correct proper explaination where user can understatnd.
+        
+        note - don't add context in answer 
+        role - you are best qna model.
+        """
         answer =  await extractor.gemini.analyze_doc(prompt=prompt)
         # answer = generate_answer(context, question)
         return {"query": question, "answer": answer}
